@@ -33,26 +33,28 @@
 
 (defun clang-format (begin end)
   "Use clang-format to format the code between BEGIN and END."
-  (let* ((orig-windows (get-buffer-window-list (current-buffer)))
-         (orig-window-starts (mapcar #'window-start orig-windows))
-         (orig-point (point))
-         (style "file"))
-    (unwind-protect
-        (call-process-region (point-min) (point-max) clang-format-binary
-                             t (list t nil) nil
-                             "-offset" (number-to-string (1- begin))
-                             "-length" (number-to-string (- end begin))
-                             "-cursor" (number-to-string (1- (point)))
-                             "-assume-filename" (buffer-file-name)
-                             "-style" style)
-      (goto-char (point-min))
-      (let ((json-output (json-read-from-string
-                           (buffer-substring-no-properties
-                             (point-min) (line-beginning-position 2)))))
-        (delete-region (point-min) (line-beginning-position 2))
-        (goto-char (1+ (cdr (assoc 'Cursor json-output))))
-        (dotimes (index (length orig-windows))
-          (set-window-start (nth index orig-windows)
-                            (nth index orig-window-starts)))))))
+  (if (executable-find clang-format-binary)
+      (let* ((orig-windows (get-buffer-window-list (current-buffer)))
+	     (orig-window-starts (mapcar #'window-start orig-windows))
+	     (orig-point (point))
+	     (style "file"))
+	(unwind-protect
+	    (call-process-region (point-min) (point-max) clang-format-binary
+				 t (list t nil) nil
+				 "-offset" (number-to-string (1- begin))
+				 "-length" (number-to-string (- end begin))
+				 "-cursor" (number-to-string (1- (point)))
+				 "-assume-filename" (buffer-file-name)
+				 "-style" style)
+	  (goto-char (point-min))
+	  (let ((json-output (json-read-from-string
+			      (buffer-substring-no-properties
+			       (point-min) (line-beginning-position 2)))))
+	    (delete-region (point-min) (line-beginning-position 2))
+	    (goto-char (1+ (cdr (assoc 'Cursor json-output))))
+	    (dotimes (index (length orig-windows))
+	      (set-window-start (nth index orig-windows)
+				(nth index orig-window-starts)))))))
+  (error "%s" (concat clang-format-binary " not found.")))
 
 (provide 'clang-format)
