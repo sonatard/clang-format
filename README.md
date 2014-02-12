@@ -12,10 +12,8 @@ Add support for requrire statement. Now available (require 'clang-format) on ini
 If clang-format is not installed, print error message on mini buffer.
 
 - Add configuration about clang-format style option  
-LLVM(default), Google, Chromium, Mozilla, WebKit,  
-file(read from .clang-format), '{key1:value1, key2:valu2, ...}' .  
-See http://clang.llvm.org/docs/ClangFormat.html  
-    http://clang.llvm.org/docs/ClangFormatStyleOptions.html
+LLVM(default), Google, Chromium, Mozilla, WebKit, file(read from .clang-format), '{key1:value1, key2:valu2, ...}' .  
+See http://clang.llvm.org/docs/ClangFormat.html, http://clang.llvm.org/docs/ClangFormatStyleOptions.html  
 
 ### Usage
 init.el
