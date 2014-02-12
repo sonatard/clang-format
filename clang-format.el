@@ -14,6 +14,7 @@
 ;; *Location of the clang-format binary. If it is on your PATH, a full path name
 ;; need not be specified.
 (defvar clang-format-binary "clang-format")
+(defvar clang-format-style-option  "llvm")
 
 (defun clang-format-region ()
   "Use clang-format to format the currently active region."
@@ -36,8 +37,7 @@
   (if (executable-find clang-format-binary)
       (let* ((orig-windows (get-buffer-window-list (current-buffer)))
 	     (orig-window-starts (mapcar #'window-start orig-windows))
-	     (orig-point (point))
-	     (style "file"))
+	     (orig-point (point)))
 	(unwind-protect
 	    (call-process-region (point-min) (point-max) clang-format-binary
 				 t (list t nil) nil
@@ -45,7 +45,7 @@
 				 "-length" (number-to-string (- end begin))
 				 "-cursor" (number-to-string (1- (point)))
 				 "-assume-filename" (buffer-file-name)
-				 "-style" style)
+				 "-style" clang-format-style-option)
 	  (goto-char (point-min))
 	  (let ((json-output (json-read-from-string
 			      (buffer-substring-no-properties
