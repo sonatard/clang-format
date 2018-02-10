@@ -54,7 +54,7 @@
 	    (goto-char (1+ (cdr (assoc 'Cursor json-output))))
 	    (dotimes (index (length orig-windows))
 	      (set-window-start (nth index orig-windows)
-				(nth index orig-window-starts)))))))
-  (error "%s" (concat clang-format-binary " not found.")))
+				(nth index orig-window-starts))))))
+  (error "%s" (concat clang-format-binary " not found."))))
 
 (provide 'clang-format)
