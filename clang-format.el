@@ -36,8 +36,7 @@
   "Use clang-format to format the code between BEGIN and END."
   (if (executable-find clang-format-binary)
       (let* ((orig-windows (get-buffer-window-list (current-buffer)))
-	     (orig-window-starts (mapcar #'window-start orig-windows))
-	     (orig-point (point)))
+	     (orig-window-starts (mapcar #'window-start orig-windows)))
 	(unwind-protect
 	    (call-process-region (point-min) (point-max) clang-format-binary
 				 t (list t nil) nil
